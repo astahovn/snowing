@@ -3,7 +3,7 @@ project(Snowing)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Snowing WIN32 Snowing.cpp)
+add_executable(Snowing WIN32 src/Snowing.cpp)
 
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})

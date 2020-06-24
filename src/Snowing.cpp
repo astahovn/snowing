@@ -288,7 +288,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
                      int       nCmdShow)
 {
 	MessageBox(hWnd, "SNOWING\n\n"
-					 "Code by Chikunkov Nikolay\n"
+					 "Code by Astakhov Nikolay\n"
 					 "Made in Novouralsk 2003\n\n"
 					 "Active keys:\n"
 					 "'SPACE' - Morphing\n"

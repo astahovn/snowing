@@ -255,6 +255,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				MessageBox(hWnd, "wglDeleteContext", "Error", MB_OK);
 			PostQuitMessage(0);
 			break;
+
 		case WM_CREATE:
 			hDC=GetDC(hWnd);
 			if (!bSetupPixelFormat(hDC))
@@ -266,18 +267,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			InitGL();
 			break;
 		
-		case WM_KEYDOWN:							// Is A Key Being Held Down?
-		{
-			keys[wParam] = TRUE;					// If So, Mark It As TRUE
-			return 0;								// Jump Back
-		}
+		case WM_KEYDOWN:
+			keys[wParam] = true;
+            ProcessKeys();
+			break;
 
-		case WM_KEYUP:								// Has A Key Been Released?
-		{
-			ProcessKeys();
-			keys[wParam] = FALSE;					// If So, Mark It As FALSE
-			return 0;								// Jump Back
-		}
+		case WM_KEYUP:
+			keys[wParam] = false;
+			break;
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
@@ -311,7 +308,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	UpdateWindow(hWnd);
 	SetCursor(NULL);
 	MSG msg;
-	while (1)
+	while (true)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
 		{

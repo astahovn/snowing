@@ -3,6 +3,8 @@
 #include <GL\glu.h>
 #include <math.h>
 #include <stdlib.h>
+#include "App.h"
+#include "Window/Win32.h"
 
 const int N=500;
 
@@ -290,33 +292,24 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 					 "Active keys:\n"
 					 "'SPACE' - Morphing\n"
 					 "'Esc' - exit", "SNOWING", MB_OK | MB_ICONINFORMATION);
-	WNDCLASS ws;
-	ws.cbClsExtra=NULL;
-	ws.cbWndExtra=NULL;
-	ws.hbrBackground=(HBRUSH) GetStockObject(BLACK_BRUSH);
-	ws.hCursor=NULL;
-	ws.hIcon=NULL;
-	ws.hInstance=hInstance;
-	ws.lpfnWndProc=WndProc;
-	ws.lpszClassName="EWClass";
-	ws.lpszMenuName=NULL;
-	ws.style=CS_HREDRAW || CS_VREDRAW;
-	RegisterClass(&ws);
-	hWnd = CreateWindowEx(WS_EX_TOPMOST, "EWClass", "OpenGL", WS_POPUP,
-		  0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), NULL, NULL, hInstance, NULL);
-	ShowWindow(hWnd, SW_SHOWNORMAL);
-	UpdateWindow(hWnd);
-	SetCursor(NULL);
+
+	App* app = new App(new Win32(hInstance));
+	app->Init();
+
 	MSG msg;
 	while (true)
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
 		{
-			if (!GetMessage(&msg, NULL, 0, 0)) break;
+			if (!GetMessage(&msg, nullptr, 0, 0)) {
+			    break;
+			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 		drawscene();
 	}
+
+	delete app;
 	return 0;
 }

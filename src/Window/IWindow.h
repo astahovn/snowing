@@ -9,11 +9,9 @@ protected:
 
 public:
     explicit IWindow(HINSTANCE hInstance) : hInstance(hInstance) {};
+    virtual ~IWindow() = default;
 
     virtual void Create() = 0;
-
-    ~IWindow() = default;
-
 };
 
 

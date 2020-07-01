@@ -1,20 +1,16 @@
 #ifndef SNOWING_APP_H
 #define SNOWING_APP_H
 
-#include "Window/IWindow.h"
+#include <windows.h>
 #include <GL\gl.h>
 #include <GL\glu.h>
+#include "Animation/Snow.h"
 
 class App {
 protected:
     HINSTANCE hInstance;
 
-    static const int N = 500;
-
-    struct tsnow {
-        float x, y, sp;
-        int angle;
-    } Point[N];
+    IAnimation *snow;
 
     struct tobject {
         float x, y, z;

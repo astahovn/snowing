@@ -6,6 +6,7 @@
 
 App::App(HINSTANCE hInstance) {
     this->hInstance = hInstance;
+    this->snow = new Snow();
 }
 
 void App::Init() {
@@ -65,6 +66,7 @@ void App::Loop() {
 }
 
 App::~App() {
+    delete snow;
 }
 
 void App::ProcessKeys() {
@@ -77,13 +79,9 @@ void App::ProcessKeys() {
 }
 
 void App::InitGL() {
+    this->snow->Init();
+
     int i;
-    for (i = 0; i < App::N; i++) {
-        this->Point[i].x = ((GLfloat) (rand() % 120)) / 100 - 0.6;
-        this->Point[i].y = ((GLfloat) (rand() % 100)) / 100 - 0.5;
-        this->Point[i].sp = (GLfloat) (1 + rand() % 3) / 1000;
-        this->Point[i].angle = rand() % 360;
-    }
 
     float step = 100 / (2 * 3.141592);
     float aangle = 0;
@@ -133,18 +131,11 @@ void App::drawscene() {
     int i;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glLoadIdentity();
-    glColor4f(1, 1, 1, Ex);
-    glTranslatef(0, 0, -1);
-    glPointSize(1);
-    glBegin(GL_POINTS);
-    for (i = 0; i < App::N; i++)
-        glVertex3f(this->Point[i].x + 0.007 * cos(this->Point[i].angle * rad), this->Point[i].y, 0);
-    glEnd();
+    this->snow->Render(Ex);
 
     if (this->ShowMorph == TRUE) {
         glLoadIdentity();
-        glColor4f(1, 0, 1, Ex);
+        glColor4f(0.6, 0.6, 1, Ex);
         glTranslatef(0, 0, -1);
         glRotatef(angle, sin(angle * rad), cos(angle * rad), 0);
         glPointSize(1.5);
@@ -154,15 +145,7 @@ void App::drawscene() {
         glEnd();
     }
 
-    for (i = 0; i < App::N; i++) {
-        this->Point[i].y = this->Point[i].y - this->Point[i].sp;
-        this->Point[i].angle += 5;
-        if (this->Point[i].y < -0.5) {
-            this->Point[i].x = ((GLfloat) (rand() % 120)) / 100 - 0.6;
-            this->Point[i].y = 0.5;
-            this->Point[i].angle = rand() % 360;
-        }
-    }
+    this->snow->Computing();
 
     if (this->StepMorph == 300) {
         this->Morphing = FALSE;

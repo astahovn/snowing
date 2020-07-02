@@ -10,16 +10,16 @@ private:
     static const int SnowflakesCount = 500;
 
     struct TSnowflake {
-        float x, y, sp;
+        GLdouble x, y, sp;
         int angle;
     } Snowflakes[SnowflakesCount];
 
-    GLfloat rad = 3.14 / 180;
+    GLdouble rad = 3.14 / 180;
 
 public:
     void Init() override;
     void Computing() override;
-    void Render(float GlobalFading) override;
+    void Render(float GlobalFading) const override;
 
 };
 

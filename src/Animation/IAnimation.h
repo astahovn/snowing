@@ -7,7 +7,7 @@ public:
 
     virtual void Init() = 0;
     virtual void Computing() = 0;
-    virtual void Render(float GlobalFading) = 0;
+    virtual void Render(float GlobalFading) const = 0;
 };
 
 #endif

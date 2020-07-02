@@ -23,7 +23,7 @@ void App::Init() {
     ws.hbrBackground = (HBRUSH) GetStockObject(BLACK_BRUSH);
     ws.hCursor = nullptr;
     ws.hIcon = nullptr;
-    ws.hInstance = this->hInstance;
+    ws.hInstance = hInstance;
     ws.lpfnWndProc = App::StaticWndProc;
     ws.lpszClassName = "EWClass";
     ws.lpszMenuName = nullptr;
@@ -43,11 +43,11 @@ void App::Init() {
             hInstance,
             this
     );
-    ShowWindow(this->hWnd, SW_SHOWNORMAL);
-    UpdateWindow(this->hWnd);
+    ShowWindow(hWnd, SW_SHOWNORMAL);
+    UpdateWindow(hWnd);
     SetCursor(nullptr);
     for (int i = 0; i < 255; i++) {
-        this->keys[i] = false;
+        keys[i] = false;
     }
 }
 
@@ -262,23 +262,23 @@ LRESULT CALLBACK App::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             break;
 
         case WM_CREATE:
-            this->hDC = GetDC(hwnd);
-            if (!bSetupPixelFormat(this->hDC))
+            hDC = GetDC(hwnd);
+            if (!bSetupPixelFormat(hDC))
                 MessageBox(hwnd, "Setup pixel format", "Error", MB_OK);
-            this->hglrc = wglCreateContext(this->hDC);
-            if (this->hglrc == nullptr) MessageBox(hwnd, "wglCreateContext", "Error", MB_OK);
-            if (!wglMakeCurrent(this->hDC, this->hglrc))
+            hglrc = wglCreateContext(hDC);
+            if (hglrc == nullptr) MessageBox(hwnd, "wglCreateContext", "Error", MB_OK);
+            if (!wglMakeCurrent(hDC, hglrc))
                 MessageBox(hwnd, "wglMakeCurrent", "Error", MB_OK);
             InitGL();
             break;
 
         case WM_KEYDOWN:
-            this->keys[wParam] = true;
+            keys[wParam] = true;
             ProcessKeys();
             break;
 
         case WM_KEYUP:
-            this->keys[wParam] = false;
+            keys[wParam] = false;
             break;
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);

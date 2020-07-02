@@ -5,52 +5,42 @@
 #include <GL\gl.h>
 #include <GL\glu.h>
 #include "Animation/Snow.h"
+#include "Animation/Morph.h"
 
 class App {
-protected:
-    HINSTANCE hInstance;
-
-    IAnimation *snow;
-
-    struct tobject {
-        float x, y, z;
-    } Circle[100], Haos[100], Some[100], Haos2[100];
-
-    struct tmorph {
-        float x, y, z, xs, ys, zs;
-    } ObjectX[100];
-
-    HWND hWnd = nullptr;
-    HGLRC hglrc;
-    HDC hDC;
-    GLfloat angle = 0, rad = 3.14 / 180;
-    bool keys[256];
-    bool Morphing = FALSE;
-    int StepMorph = 1;
-    bool Exit = FALSE;
-    float Ex = 1;
-    bool ShowMorph = TRUE;
-
 public:
     explicit App(HINSTANCE hInstance);
 
     ~App();
 
-    void Init();
-
-    void Loop();
-
     static LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-    void drawscene();
+    BOOL bSetupPixelFormat(HDC hdc);
+
+    void Init();
 
     void InitGL();
 
+    void Loop();
+
+    void Render();
+
     void ProcessKeys();
 
-    BOOL bSetupPixelFormat(HDC hdc);
+private:
+    HINSTANCE hInstance;
+
+    IAnimation *snow, *morph;
+
+    HWND hWnd = nullptr;
+    HGLRC hglrc;
+    HDC hDC;
+    bool keys[256];
+    bool globalFadingStart = FALSE;
+    float globalFadingStep = 1;
+    bool showMorph = TRUE;
 };
 
 #endif

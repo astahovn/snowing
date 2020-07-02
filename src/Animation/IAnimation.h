@@ -5,9 +5,9 @@ class IAnimation {
 public:
     virtual ~IAnimation() = default;
 
-    virtual void Init() = 0;
-    virtual void Computing() = 0;
-    virtual void Render(float GlobalFading) const = 0;
+    virtual void init() = 0;
+    virtual void computing() = 0;
+    virtual void render(float globalFading) const = 0;
 };
 
 #endif

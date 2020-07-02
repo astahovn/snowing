@@ -1,34 +1,34 @@
 #include <cstdlib>
 #include "Snow.h"
 
-void Snow::Init() {
-    for (auto & Snowflake : Snowflakes) {
-        Snowflake.x = ((GLfloat) (rand() % 120)) / 100 - 0.6;
-        Snowflake.y = ((GLfloat) (rand() % 100)) / 100 - 0.5;
-        Snowflake.sp = (GLfloat) (1 + rand() % 3) / 1000;
-        Snowflake.angle = rand() % 360;
+void Snow::init() {
+    for (auto & snowflake : snowflakes) {
+        snowflake.x = ((GLdouble) (rand() % 120)) / 100 - 0.6;
+        snowflake.y = ((GLdouble) (rand() % 100)) / 100 - 0.5;
+        snowflake.sp = (GLdouble) (1 + rand() % 3) / 1000;
+        snowflake.angle = rand() % 360;
     }
 }
 
-void Snow::Computing() {
-    for (auto & Snowflake : Snowflakes) {
-        Snowflake.y = Snowflake.y - Snowflake.sp;
-        Snowflake.angle += 5;
-        if (Snowflake.y < -0.5) {
-            Snowflake.x = ((GLfloat) (rand() % 120)) / 100 - 0.6;
-            Snowflake.y = 0.5;
-            Snowflake.angle = rand() % 360;
+void Snow::computing() {
+    for (auto & snowflake : snowflakes) {
+        snowflake.y = snowflake.y - snowflake.sp;
+        snowflake.angle += 5;
+        if (snowflake.y < -0.5) {
+            snowflake.x = ((GLfloat) (rand() % 120)) / 100 - 0.6;
+            snowflake.y = 0.5;
+            snowflake.angle = rand() % 360;
         }
     }
 }
 
-void Snow::Render(const float GlobalFading) const {
+void Snow::render(const float globalFading) const {
     glLoadIdentity();
-    glColor4f(1, 1, 1, GlobalFading);
+    glColor4f(1, 1, 1, globalFading);
     glTranslatef(0, 0, -1);
     glPointSize(1);
     glBegin(GL_POINTS);
-    for (auto & Snowflake : Snowflakes) {
+    for (auto & Snowflake : snowflakes) {
         glVertex3f(Snowflake.x + 0.007 * cos(Snowflake.angle * rad), Snowflake.y, 0);
     }
     glEnd();

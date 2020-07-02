@@ -2,11 +2,11 @@
 #include <GL\gl.h>
 #include <GL\glu.h>
 #include <math.h>
-#include <stdlib.h>
 
-App::App(HINSTANCE hInstance) {
-    this->hInstance = hInstance;
-    this->snow = new Snow();
+App::App(HINSTANCE pHInstance) {
+    hInstance = pHInstance;
+    snow = new Snow();
+    morph = new Morph();
 }
 
 void App::Init() {
@@ -61,59 +61,33 @@ void App::Loop() {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        drawscene();
+        Render();
     }
 }
 
 App::~App() {
     delete snow;
+    delete morph;
 }
 
 void App::ProcessKeys() {
-    if (this->keys[VK_ESCAPE])
-        this->Exit = TRUE;
-    if (this->keys[VK_SPACE]) {
-        if (this->ShowMorph == TRUE) this->ShowMorph = FALSE;
-        else this->ShowMorph = TRUE;
+    if (keys[VK_ESCAPE]) {
+        globalFadingStart = TRUE;
+    }
+    if (keys[VK_SPACE]) {
+        showMorph = !showMorph;
     }
 }
 
 void App::InitGL() {
-    this->snow->Init();
-
-    int i;
-
-    float step = 100 / (2 * 3.141592);
-    float aangle = 0;
-    for (i = 0; i < 100; i++) {
-        this->Some[i].x = 0.1 * cos(aangle * this->rad);
-        this->Some[i].y = 0.1 * sin(aangle * this->rad);
-        this->Some[i].z = 0.1 * cos(aangle * this->rad) * sin(aangle * this->rad);
-
-        this->Circle[i].x = 0.1 * cos(aangle * this->rad);
-        this->Circle[i].y = 0.1 * sin(aangle * this->rad);
-        this->Circle[i].z = 0.1 * cos(aangle * this->rad);
-        aangle = aangle + step;
-        this->Haos[i].x = (GLfloat) (rand() % 30) / 100 - 0.15;
-        this->Haos[i].y = (GLfloat) (rand() % 30) / 100 - 0.15;
-        this->Haos[i].z = (GLfloat) (rand() % 30) / 100 - 0.15;
-
-        this->Haos2[i].x = 0.1 * sin(aangle * this->rad) * cos(aangle * this->rad);
-        this->Haos2[i].y = 0.1 * cos(aangle * this->rad);
-        this->Haos2[i].z = 0.1 * sin(aangle * this->rad) * cos(aangle * this->rad);
-    }
-    for (i = 0; i < 100; i++) {
-        this->ObjectX[i].x = this->Haos2[i].x;
-        this->ObjectX[i].y = this->Haos2[i].y;
-        this->ObjectX[i].z = this->Haos2[i].z;
-    }
-    this->angle = 0;
+    snow->init();
+    morph->init();
 
     glClearColor(0, 0, 0, 0);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    GLfloat aspect = (GLfloat) GetSystemMetrics(SM_CXSCREEN) / GetSystemMetrics(SM_CYSCREEN);
+    GLdouble aspect = (GLdouble) GetSystemMetrics(SM_CXSCREEN) / GetSystemMetrics(SM_CYSCREEN);
     gluPerspective(45.0, aspect, 0.1, 100.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -127,84 +101,24 @@ void App::InitGL() {
     glDisable(GL_DEPTH_TEST);
 }
 
-void App::drawscene() {
-    int i;
+void App::Render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    this->snow->Render(Ex);
+    snow->render(globalFadingStep);
 
-    if (this->ShowMorph == TRUE) {
-        glLoadIdentity();
-        glColor4f(0.6, 0.6, 1, Ex);
-        glTranslatef(0, 0, -1);
-        glRotatef(angle, sin(angle * rad), cos(angle * rad), 0);
-        glPointSize(1.5);
-        glBegin(GL_POINTS);
-        for (i = 0; i < 100; i++)
-            glVertex3f(ObjectX[i].x, ObjectX[i].y, ObjectX[i].z);
-        glEnd();
+    if (showMorph == TRUE) {
+        morph->render(globalFadingStep);
     }
 
-    this->snow->Computing();
+    snow->computing();
+    morph->computing();
 
-    if (this->StepMorph == 300) {
-        this->Morphing = FALSE;
-        this->StepMorph = 1;
-    }
-    if (this->StepMorph == 200) {
-        int z = rand() % 4;
-        switch (z) {
-            case 0: {
-                for (i = 0; i < 100; i++) {
-                    this->ObjectX[i].xs = (this->Haos[i].x - this->ObjectX[i].x) / 100;
-                    this->ObjectX[i].ys = (this->Haos[i].y - this->ObjectX[i].y) / 100;
-                    this->ObjectX[i].zs = (this->Haos[i].z - this->ObjectX[i].z) / 100;
-                }
-                break;
-            }
-            case 1: {
-                for (i = 0; i < 100; i++) {
-                    this->ObjectX[i].xs = (this->Haos2[i].x - this->ObjectX[i].x) / 100;
-                    this->ObjectX[i].ys = (this->Haos2[i].y - this->ObjectX[i].y) / 100;
-                    this->ObjectX[i].zs = (this->Haos2[i].z - this->ObjectX[i].z) / 100;
-                }
-                break;
-            }
-            case 2: {
-                for (i = 0; i < 100; i++) {
-                    this->ObjectX[i].xs = (this->Circle[i].x - this->ObjectX[i].x) / 100;
-                    this->ObjectX[i].ys = (this->Circle[i].y - this->ObjectX[i].y) / 100;
-                    this->ObjectX[i].zs = (this->Circle[i].z - this->ObjectX[i].z) / 100;
-                }
-                break;
-            }
-            case 3: {
-                for (i = 0; i < 100; i++) {
-                    this->ObjectX[i].xs = (this->Some[i].x - this->ObjectX[i].x) / 100;
-                    this->ObjectX[i].ys = (this->Some[i].y - this->ObjectX[i].y) / 100;
-                    this->ObjectX[i].zs = (this->Some[i].z - this->ObjectX[i].z) / 100;
-                }
-                break;
-            }
-        }
-        this->Morphing = TRUE;
-    }
-    if (this->Morphing == TRUE) {
-        for (i = 0; i < 100; i++) {
-            this->ObjectX[i].x += this->ObjectX[i].xs;
-            this->ObjectX[i].y += this->ObjectX[i].ys;
-            this->ObjectX[i].z += this->ObjectX[i].zs;
-        }
+    if (globalFadingStart == TRUE) globalFadingStep = globalFadingStep - 0.005f;
+    if (globalFadingStep < 0.1) {
+        SendMessage(hWnd, WM_DESTROY, 0, 0);
     }
 
-    this->StepMorph++;
-    this->angle += 1;
-    if (this->angle == 360) this->angle = 0;
-
-    if (this->Exit == TRUE) this->Ex = this->Ex - 0.005f;
-    if (this->Ex < 0.1) SendMessage(this->hWnd, WM_DESTROY, 0, 0);
-
-    SwapBuffers(this->hDC);
+    SwapBuffers(hDC);
 }
 
 BOOL App::bSetupPixelFormat(HDC hdc) {

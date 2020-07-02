@@ -7,17 +7,17 @@
 
 class Snow : public IAnimation {
 public:
-    void Init() override;
-    void Computing() override;
-    void Render(float GlobalFading) const override;
+    void init() override;
+    void computing() override;
+    void render(float globalFading) const override;
 
 private:
-    static const int SnowflakesCount = 500;
+    static const int SNOWFLAKES_COUNT = 500;
 
     struct TSnowflake {
         GLdouble x, y, sp;
         int angle;
-    } Snowflakes[SnowflakesCount];
+    } snowflakes[SNOWFLAKES_COUNT];
 
     GLdouble rad = 3.14 / 180;
 };

@@ -46,9 +46,6 @@ void App::init() {
     ShowWindow(hWnd, SW_SHOWNORMAL);
     UpdateWindow(hWnd);
     SetCursor(nullptr);
-    for (int i = 0; i < 255; i++) {
-        keys[i] = false;
-    }
 }
 
 void App::loop() {

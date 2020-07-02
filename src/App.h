@@ -35,9 +35,9 @@ private:
     IAnimation *snow, *morph;
 
     HWND hWnd = nullptr;
-    HGLRC hglrc;
-    HDC hDC;
-    bool keys[256];
+    HGLRC hglrc = nullptr;
+    HDC hDC = nullptr;
+    bool keys[256]{};
     bool globalFadingStart = FALSE;
     float globalFadingStep = 1;
     bool showMorph = TRUE;

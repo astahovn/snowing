@@ -8,8 +8,8 @@ int APIENTRY WinMain(
         int nCmdShow
 ) {
     App *app = new App(hInstance);
-    app->Init();
-    app->Loop();
+    app->init();
+    app->loop();
 
     delete app;
     return 0;

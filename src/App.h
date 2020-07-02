@@ -19,15 +19,15 @@ public:
 
     BOOL bSetupPixelFormat(HDC hdc);
 
-    void Init();
+    void init();
 
-    void InitGL();
+    void initGL();
 
-    void Loop();
+    void loop();
 
-    void Render();
+    void render();
 
-    void ProcessKeys();
+    void processKeys();
 
 private:
     HINSTANCE hInstance;

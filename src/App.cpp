@@ -9,7 +9,7 @@ App::App(HINSTANCE pHInstance) {
     morph = new Morph();
 }
 
-void App::Init() {
+void App::init() {
     MessageBox(nullptr, "SNOWING\n\n"
                         "Code by Astakhov Nikolay\n"
                         "Made in Novouralsk 2003\n\n"
@@ -51,7 +51,7 @@ void App::Init() {
     }
 }
 
-void App::Loop() {
+void App::loop() {
     MSG msg;
     while (true) {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE)) {
@@ -61,7 +61,7 @@ void App::Loop() {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        Render();
+        render();
     }
 }
 
@@ -70,7 +70,7 @@ App::~App() {
     delete morph;
 }
 
-void App::ProcessKeys() {
+void App::processKeys() {
     if (keys[VK_ESCAPE]) {
         globalFadingStart = TRUE;
     }
@@ -79,7 +79,7 @@ void App::ProcessKeys() {
     }
 }
 
-void App::InitGL() {
+void App::initGL() {
     snow->init();
     morph->init();
 
@@ -101,7 +101,7 @@ void App::InitGL() {
     glDisable(GL_DEPTH_TEST);
 }
 
-void App::Render() {
+void App::render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     snow->render(globalFadingStep);
@@ -183,12 +183,12 @@ LRESULT CALLBACK App::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             if (hglrc == nullptr) MessageBox(hwnd, "wglCreateContext", "Error", MB_OK);
             if (!wglMakeCurrent(hDC, hglrc))
                 MessageBox(hwnd, "wglMakeCurrent", "Error", MB_OK);
-            InitGL();
+            initGL();
             break;
 
         case WM_KEYDOWN:
             keys[wParam] = true;
-            ProcessKeys();
+            processKeys();
             break;
 
         case WM_KEYUP:

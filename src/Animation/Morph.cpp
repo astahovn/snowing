@@ -6,7 +6,7 @@ void Morph::init() {
     GLdouble step = 100 / (2 * 3.141592);
     GLdouble aangle = 0;
 
-    for (i = 0; i < 100; i++) {
+    for (i = 0; i < POINTS_COUNT; i++) {
         some[i].x = 0.1 * cos(aangle * rad);
         some[i].y = 0.1 * sin(aangle * rad);
         some[i].z = 0.1 * cos(aangle * rad) * sin(aangle * rad);
@@ -23,7 +23,7 @@ void Morph::init() {
         chaos2[i].y = 0.1 * cos(aangle * rad);
         chaos2[i].z = 0.1 * sin(aangle * rad) * cos(aangle * rad);
     }
-    for (i = 0; i < 100; i++) {
+    for (i = 0; i < POINTS_COUNT; i++) {
         objectX[i].x = chaos2[i].x;
         objectX[i].y = chaos2[i].y;
         objectX[i].z = chaos2[i].z;

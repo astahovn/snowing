@@ -6,6 +6,11 @@
 #include "IAnimation.h"
 
 class Snow : public IAnimation {
+public:
+    void Init() override;
+    void Computing() override;
+    void Render(float GlobalFading) const override;
+
 private:
     static const int SnowflakesCount = 500;
 
@@ -15,12 +20,6 @@ private:
     } Snowflakes[SnowflakesCount];
 
     GLdouble rad = 3.14 / 180;
-
-public:
-    void Init() override;
-    void Computing() override;
-    void Render(float GlobalFading) const override;
-
 };
 
 #endif

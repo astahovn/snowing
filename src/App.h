@@ -4,8 +4,7 @@
 #include <windows.h>
 #include <GL\gl.h>
 #include <GL\glu.h>
-#include "Animation/Snow.h"
-#include "Animation/Morph.h"
+#include "Animation/Scene.h"
 
 class App {
 public:
@@ -13,34 +12,33 @@ public:
 
     ~App();
 
+    void init();
+
+    void loop();
+
+private:
+    void initGL();
+
+    void computing();
+
+    void render();
+
+    void processKeys();
+
     static LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     BOOL bSetupPixelFormat(HDC hdc);
 
-    void init();
-
-    void initGL();
-
-    void loop();
-
-    void render();
-
-    void processKeys();
-
-private:
     HINSTANCE hInstance;
-
-    IAnimation *snow, *morph;
-
     HWND hWnd = nullptr;
     HGLRC hglrc = nullptr;
     HDC hDC = nullptr;
+
     bool keys[256]{};
-    bool globalFadingStart = FALSE;
-    float globalFadingStep = 1;
-    bool showMorph = TRUE;
+
+    IAnimation *scene;
 };
 
 #endif

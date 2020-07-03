@@ -8,8 +8,9 @@
 class Morph : public IAnimation {
 public:
     void init() override;
-    void computing() override;
+    int computing() override;
     void render(float globalFading) const override;
+    void processKeys(const bool keys[]) override;
 
 private:
     static const int POINTS_COUNT = 100;
@@ -25,6 +26,7 @@ private:
     GLdouble angle = 0, rad = 3.14 / 180;
     bool morphingInProcess = FALSE;
     int morphStep = 1;
+    bool showMorph = TRUE;
 };
 
 

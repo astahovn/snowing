@@ -8,8 +8,9 @@
 class Snow : public IAnimation {
 public:
     void init() override;
-    void computing() override;
+    int computing() override;
     void render(float globalFading) const override;
+    void processKeys(const bool keys[]) override {};
 
 private:
     static const int SNOWFLAKES_COUNT = 500;

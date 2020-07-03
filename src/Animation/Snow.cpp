@@ -10,7 +10,7 @@ void Snow::init() {
     }
 }
 
-void Snow::computing() {
+int Snow::computing() {
     for (auto & snowflake : snowflakes) {
         snowflake.y = snowflake.y - snowflake.sp;
         snowflake.angle += 5;
@@ -20,6 +20,7 @@ void Snow::computing() {
             snowflake.angle = rand() % 360;
         }
     }
+    return COMPUTING_OK;
 }
 
 void Snow::render(const float globalFading) const {

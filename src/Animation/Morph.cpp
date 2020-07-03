@@ -31,7 +31,7 @@ void Morph::init() {
     angle = 0;
 }
 
-void Morph::computing() {
+int Morph::computing() {
     int i;
     if (morphStep == 300) {
         morphingInProcess = FALSE;
@@ -86,9 +86,15 @@ void Morph::computing() {
     morphStep++;
     angle += 1;
     if (angle == 360) angle = 0;
+
+    return COMPUTING_OK;
 }
 
 void Morph::render(float globalFading) const {
+    if (!showMorph) {
+        return;
+    }
+
     glLoadIdentity();
     glColor4f(0.6, 0.6, 1, globalFading);
     glTranslatef(0, 0, -1);
@@ -99,4 +105,10 @@ void Morph::render(float globalFading) const {
         glVertex3f(objectXPoint.x, objectXPoint.y, objectXPoint.z);
     }
     glEnd();
+}
+
+void Morph::processKeys(const bool *keys) {
+    if (keys[VK_SPACE]) {
+        showMorph = !showMorph;
+    }
 }

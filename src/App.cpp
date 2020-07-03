@@ -1,12 +1,13 @@
 #include "App.h"
-#include <GL\gl.h>
-#include <GL\glu.h>
 #include <math.h>
 
 App::App(HINSTANCE pHInstance) {
     hInstance = pHInstance;
-    snow = new Snow();
-    morph = new Morph();
+    scene = new Scene();
+}
+
+App::~App() {
+    delete scene;
 }
 
 void App::init() {
@@ -58,62 +59,29 @@ void App::loop() {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
+        computing();
         render();
     }
 }
 
-App::~App() {
-    delete snow;
-    delete morph;
-}
-
 void App::processKeys() {
-    if (keys[VK_ESCAPE]) {
-        globalFadingStart = TRUE;
-    }
-    if (keys[VK_SPACE]) {
-        showMorph = !showMorph;
-    }
+    scene->processKeys(keys);
 }
 
 void App::initGL() {
-    snow->init();
-    morph->init();
+    scene->init();
+}
 
-    glClearColor(0, 0, 0, 0);
+void App::computing() {
+    int computingResult = scene->computing();
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    GLdouble aspect = (GLdouble) GetSystemMetrics(SM_CXSCREEN) / GetSystemMetrics(SM_CYSCREEN);
-    gluPerspective(45.0, aspect, 0.1, 100.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glClearDepth(1.0f);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    glEnable(GL_BLEND);
-    glDisable(GL_DEPTH_TEST);
+    if (IAnimation::COMPUTING_END == computingResult) {
+        SendMessage(hWnd, WM_DESTROY, 0, 0);
+    }
 }
 
 void App::render() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    snow->render(globalFadingStep);
-
-    if (showMorph == TRUE) {
-        morph->render(globalFadingStep);
-    }
-
-    snow->computing();
-    morph->computing();
-
-    if (globalFadingStart == TRUE) globalFadingStep = globalFadingStep - 0.005f;
-    if (globalFadingStep < 0.1) {
-        SendMessage(hWnd, WM_DESTROY, 0, 0);
-    }
+    scene->render(0);
 
     SwapBuffers(hDC);
 }

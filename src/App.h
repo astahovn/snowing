@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <GL\gl.h>
 #include <GL\glu.h>
+#include "Gfx.h"
 #include "Animation/Scene.h"
 
 class App {
@@ -17,28 +18,21 @@ public:
     void loop();
 
 private:
-    void initGL();
+    HINSTANCE hInstance;
+    HWND hWnd = nullptr;
+
+    bool keys[256]{};
+
+    Gfx *gfx;
+    IAnimation *scene;
 
     void computing();
 
     void render();
 
-    void processKeys();
-
     static LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-    BOOL bSetupPixelFormat(HDC hdc);
-
-    HINSTANCE hInstance;
-    HWND hWnd = nullptr;
-    HGLRC hglrc = nullptr;
-    HDC hDC = nullptr;
-
-    bool keys[256]{};
-
-    IAnimation *scene;
 };
 
 #endif

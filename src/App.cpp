@@ -3,11 +3,13 @@
 
 App::App(HINSTANCE pHInstance) {
     hInstance = pHInstance;
+    gfx = new Gfx();
     scene = new Scene();
 }
 
 App::~App() {
     delete scene;
+    delete gfx;
 }
 
 void App::init() {
@@ -64,14 +66,6 @@ void App::loop() {
     }
 }
 
-void App::processKeys() {
-    scene->processKeys(keys);
-}
-
-void App::initGL() {
-    scene->init();
-}
-
 void App::computing() {
     int computingResult = scene->computing();
 
@@ -83,38 +77,8 @@ void App::computing() {
 void App::render() {
     scene->render(0);
 
-    SwapBuffers(hDC);
+    gfx->paint();
 }
-
-BOOL App::bSetupPixelFormat(HDC hdc) {
-    PIXELFORMATDESCRIPTOR pfd, *ppfd;
-    int pixelformat;
-
-    ppfd = &pfd;
-
-    ppfd->nSize = sizeof(PIXELFORMATDESCRIPTOR);
-    ppfd->nVersion = 1;
-    ppfd->dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-    ppfd->dwLayerMask = PFD_MAIN_PLANE;
-    ppfd->iPixelType = PFD_TYPE_RGBA;
-    ppfd->cColorBits = 8;
-    ppfd->cDepthBits = 16;
-    ppfd->cAccumBits = 0;
-    ppfd->cStencilBits = 0;
-
-    if ((pixelformat = ChoosePixelFormat(hdc, ppfd)) == 0) {
-        MessageBox(nullptr, "ChoosePixelFormat failed", "Error", MB_OK);
-        return FALSE;
-    }
-
-    if (SetPixelFormat(hdc, pixelformat, ppfd) == FALSE) {
-        MessageBox(nullptr, "SetPixelFormat failed", "Error", MB_OK);
-        return FALSE;
-    }
-
-    return TRUE;
-}
-
 
 LRESULT CALLBACK App::StaticWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (uMsg == WM_NCCREATE) {
@@ -133,27 +97,18 @@ LRESULT CALLBACK App::StaticWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 LRESULT CALLBACK App::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
         case WM_DESTROY:
-            if (!wglMakeCurrent(nullptr, nullptr))
-                MessageBox(hwnd, "wglMakeCurrent", "Error", MB_OK);
-            if (!wglDeleteContext(hglrc))
-                MessageBox(hwnd, "wglDeleteContext", "Error", MB_OK);
+            gfx->shutdown(hwnd);
             PostQuitMessage(0);
             break;
 
         case WM_CREATE:
-            hDC = GetDC(hwnd);
-            if (!bSetupPixelFormat(hDC))
-                MessageBox(hwnd, "Setup pixel format", "Error", MB_OK);
-            hglrc = wglCreateContext(hDC);
-            if (hglrc == nullptr) MessageBox(hwnd, "wglCreateContext", "Error", MB_OK);
-            if (!wglMakeCurrent(hDC, hglrc))
-                MessageBox(hwnd, "wglMakeCurrent", "Error", MB_OK);
-            initGL();
+            gfx->init(hwnd);
+            scene->init();
             break;
 
         case WM_KEYDOWN:
             keys[wParam] = true;
-            processKeys();
+            scene->processKeys(keys);
             break;
 
         case WM_KEYUP:

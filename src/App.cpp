@@ -33,7 +33,7 @@ void App::init() {
     ws.style = CS_HREDRAW || CS_VREDRAW;
     RegisterClass(&ws);
     this->hWnd = CreateWindowEx(
-            WS_EX_TOPMOST,
+            WS_EX_APPWINDOW,
             "EWClass",
             "OpenGL",
             WS_POPUP,

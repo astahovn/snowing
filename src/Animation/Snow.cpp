@@ -25,11 +25,12 @@ int Snow::computing() {
 
 void Snow::render(const float globalFading) const {
     glLoadIdentity();
-    glColor4f(1, 1, 1, globalFading);
     glTranslatef(0, 0, -1);
     glPointSize(1);
     glBegin(GL_POINTS);
     for (auto & Snowflake : snowflakes) {
+        GLdouble alpha = globalFading - (0.9 - Snowflake.sp * 300);
+        glColor4f(1, 1, 1, (alpha > 0 ? alpha : 0));
         glVertex3f(Snowflake.x + 0.007 * cos(Snowflake.angle * rad), Snowflake.y, 0);
     }
     glEnd();

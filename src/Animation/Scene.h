@@ -5,6 +5,7 @@
 #include <GL\gl.h>
 #include <GL\glu.h>
 #include "IAnimation.h"
+#include "AnimationAggregate.h"
 #include "Snow.h"
 #include "Morph.h"
 
@@ -19,7 +20,7 @@ public:
     void processKeys(const bool keys[]) override;
 
 private:
-    IAnimation *snow, *morph;
+    AnimationAggregate *animation;
 
     bool globalFadingStart = FALSE;
     float globalFadingStep = 1;

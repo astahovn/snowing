@@ -1,13 +1,13 @@
 #include "Scene.h"
 
 Scene::Scene() {
-    snow = new Snow();
-    morph = new Morph();
+    animation = new AnimationAggregate();
+    animation->addAnimation(new Snow());
+    animation->addAnimation(new Morph());
 }
 
 Scene::~Scene() {
-    delete snow;
-    delete morph;
+    delete animation;
 }
 
 void Scene::init() {
@@ -28,13 +28,11 @@ void Scene::init() {
     glEnable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
 
-    snow->init();
-    morph->init();
+    animation->init();
 }
 
 int Scene::computing() {
-    snow->computing();
-    morph->computing();
+    animation->computing();
 
     if (globalFadingStart == TRUE) globalFadingStep = globalFadingStep - 0.005f;
     if (globalFadingStep < 0.1) {
@@ -46,8 +44,7 @@ int Scene::computing() {
 void Scene::render(float globalFading) const {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    snow->render(globalFadingStep);
-    morph->render(globalFadingStep);
+    animation->render(globalFadingStep);
 }
 
 void Scene::processKeys(const bool *keys) {
@@ -55,6 +52,5 @@ void Scene::processKeys(const bool *keys) {
         globalFadingStart = TRUE;
     }
 
-    snow->processKeys(keys);
-    morph->processKeys(keys);
+    animation->processKeys(keys);
 }

@@ -20,10 +20,6 @@ public:
 
     void addHandler(IWMHandler * handler);
 
-    static LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-    LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 private:
     HINSTANCE hInstance;
     HWND hWnd = nullptr;
@@ -31,6 +27,10 @@ private:
     Gfx *gfx;
 
     std::vector<IWMHandler *> handlers{};
+
+    static LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+    LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 

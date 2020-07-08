@@ -4,10 +4,11 @@
 #include <windows.h>
 #include <GL\gl.h>
 #include <GL\glu.h>
-#include "Gfx.h"
+#include "Window/Win.h"
+#include "Window/IWMHandler.h"
 #include "Animation/Scene.h"
 
-class App {
+class App : public IWMHandler {
 public:
     explicit App(HINSTANCE hInstance);
 
@@ -17,22 +18,20 @@ public:
 
     void loop();
 
-private:
-    HINSTANCE hInstance;
-    HWND hWnd = nullptr;
+    void onWinCreate() override;
+    void onWinDestroy() override;
+    void onKeyDown(int key) override;
+    void onKeyUp(int key) override;
 
+private:
     bool keys[256]{};
 
-    Gfx *gfx;
+    Win *win;
     IAnimation *scene;
 
     void computing();
 
     void render();
-
-    static LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-    LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 #endif
